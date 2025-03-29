@@ -53,11 +53,18 @@ export const taskInput = z.object({
     }), 
     assignee: z.string().min(1, "Assignee is required"),
     sectionId: z.string().min(1, "Section ID is required").optional(),
-  })
+  });
+
+  export const moveTaskInput = z.object({
+    taskId: z.string(),
+    sourceSectionId: z.string(),
+    destinationSectionId: z.string()
+  });
 
 
 export type SectionInput = z.infer<typeof sectionInput>;
 export type UpdateSectionInput = z.infer<typeof updateSectionInput>;
 export type TaskInput = z.infer<typeof taskInput>;
 export type SignupInput = z.infer<typeof signupInput>;
-export type SigninInput = z.infer<typeof loginInput>
+export type SigninInput = z.infer<typeof loginInput>;
+export type MoveTaskInput = z.infer<typeof moveTaskInput>;

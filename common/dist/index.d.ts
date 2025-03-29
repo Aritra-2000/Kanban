@@ -61,8 +61,22 @@ export declare const taskInput: z.ZodObject<{
     assignee: string;
     sectionId?: string | undefined;
 }>;
+export declare const moveTaskInput: z.ZodObject<{
+    taskId: z.ZodString;
+    sourceSectionId: z.ZodString;
+    destinationSectionId: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    taskId: string;
+    sourceSectionId: string;
+    destinationSectionId: string;
+}, {
+    taskId: string;
+    sourceSectionId: string;
+    destinationSectionId: string;
+}>;
 export type SectionInput = z.infer<typeof sectionInput>;
 export type UpdateSectionInput = z.infer<typeof updateSectionInput>;
 export type TaskInput = z.infer<typeof taskInput>;
 export type SignupInput = z.infer<typeof signupInput>;
 export type SigninInput = z.infer<typeof loginInput>;
+export type MoveTaskInput = z.infer<typeof moveTaskInput>;

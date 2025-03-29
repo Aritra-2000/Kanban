@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.taskInput = exports.updateSectionInput = exports.sectionInput = exports.loginInput = exports.signupInput = void 0;
+exports.moveTaskInput = exports.taskInput = exports.updateSectionInput = exports.sectionInput = exports.loginInput = exports.signupInput = void 0;
 const zod_1 = __importDefault(require("zod"));
 const date_fns_1 = require("date-fns");
 exports.signupInput = zod_1.default.object({
@@ -52,4 +52,9 @@ exports.taskInput = zod_1.default.object({
     }),
     assignee: zod_1.default.string().min(1, "Assignee is required"),
     sectionId: zod_1.default.string().min(1, "Section ID is required").optional(),
+});
+exports.moveTaskInput = zod_1.default.object({
+    taskId: zod_1.default.string(),
+    sourceSectionId: zod_1.default.string(),
+    destinationSectionId: zod_1.default.string()
 });

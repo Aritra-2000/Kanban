@@ -1,4 +1,4 @@
-import { taskInput } from "@aritra-paul/kanban-common";
+import { taskInput , moveTaskInput} from "@aritra-paul/kanban-common";
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { Context } from "hono";
@@ -74,8 +74,6 @@ export default class TaskController{
                 }
             })
 
-            console.log(newTask);
-
             const ad = await prisma.section.update({
                 where:{
                     id: section.id
@@ -86,8 +84,6 @@ export default class TaskController{
                     }
                 }
             });
-
-            console.log(ad);
             
             c.status(201);
             return c.json(newTask);
@@ -102,9 +98,6 @@ export default class TaskController{
 
         const {taskId} = c.req.param();
         const body = await c.req.json();
-
-        console.log("Attempting to update task with ID:", taskId);
-        console.log("Request body:", body);
 
         const {success} = taskInput.safeParse(body);
 
@@ -126,8 +119,6 @@ export default class TaskController{
                     id: taskId
                 }
             });
-
-            console.log("Existing task result:", existingTask);
 
             if(!existingTask) {
                 c.status(404);
@@ -171,15 +162,15 @@ export default class TaskController{
     async moveTask(c: Context){
 
         const body = await c.req.json();
-        const {success} = taskInput.safeParse(body);
+        const parseResult = moveTaskInput.safeParse(body)
 
-        if(!success){
-            c.status(411);
-            return c.json({
-                message: "Inputs not correct"
-            })
+        if (!parseResult.success) {
+           c.status(400)
+           return c.json({
+               message: "Invalid input",
+               errors: parseResult.error.errors
+           })
         }
-
 
         const prisma = new PrismaClient({
             datasourceUrl: c.env?.DATABASE_URL
@@ -228,50 +219,27 @@ export default class TaskController{
                 })
             }
 
-            await prisma.section.update({
-                where:{
-                    id: body.sourceSectionId
-                },
-                data:{
-                    tasks:{
-                        disconnect:{id: body.taskId}
-                    },
-                },
-            });
+            if (existingTask.sectionId !== body.sourceSectionId) {
+                c.status(400);
+                return c.json({
+                    error: "Task is not in the specified source section"
+                });
+            }
 
-            await prisma.task.update({
-                where:{
+            const updatedTask = await prisma.task.update({
+                where: {
                     id: body.taskId
                 },
-                data:{
+                data: {
                     sectionId: body.destinationSectionId
-                }
-            });
-
-            await prisma.section.update({
-                where:{
-                    id: body.destinationSectionId
                 },
-                data:{
-                    tasks:{
-                        connect:{
-                            id: body.taskId
-                        }
-                    }
-                }
-            })
-
-            const updateTask = await prisma.task.findUnique({
-                where:{
-                    id: body.taskId
-                },
-                include:{
+                include: {
                     section: true
                 }
             });
 
             c.status(200);
-            return c.json(updateTask);
+            return c.json(updatedTask);
         } catch (error) {
             c.status(500);
             return c.json({ error: 'An error occurred while moving the task' });

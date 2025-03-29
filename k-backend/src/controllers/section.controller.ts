@@ -98,8 +98,6 @@ export default class SectionController{
                 }
             });
 
-            console.log('Deleted section:', section);
-
             c.status(200);
             return c.json({message: 'Section deleted successfully'})
         } catch (error) {
@@ -122,9 +120,6 @@ export default class SectionController{
             })
         }
 
-        console.log("Attempting to update section with ID:", id);
-        console.log("Update data:", body);
-
         const prisma = new PrismaClient({
             datasourceUrl: c.env?.DATABASE_URL
         }).$extends(withAccelerate());
@@ -140,7 +135,6 @@ export default class SectionController{
             });
     
             if (!existingSection) {
-                console.log(`Section with ID ${id} not found`);
                 c.status(404);
                 return c.json({ message: `Section with ID ${id} not found` });
             }
@@ -153,8 +147,6 @@ export default class SectionController{
                     name: name
                 }
             });
-
-            console.log({"updatedSection": updatedSection})
 
             c.status(200);
             return c.json(updatedSection);

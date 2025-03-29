@@ -39,7 +39,6 @@ import API from "../Axios/api";
 
     export const fetchSections = createAsyncThunk("kanban/fetchSections", async() =>{
         const response = await API.get<Section[]>("/section");
-        console.log('API response:', response.data); 
         return response.data;
     });
 
@@ -106,13 +105,13 @@ import API from "../Axios/api";
     { 
         taskId: string; 
         sourceSectionId: string; 
-        destinationSectionId: string; 
-        task: any 
+        destinationSectionId: string;
+        task: any
     }, 
         MoveTaskPayload
     >(
         'kanban/moveTask',
-        async ({ taskId, sourceSectionId, destinationSectionId, task}, { dispatch }) => {
+        async ({ taskId, sourceSectionId, destinationSectionId}, { dispatch }) => {
             try {
                 const response = await API.patch(`/task/move`, {
                     taskId,
@@ -222,7 +221,7 @@ const kanbanSlice = createSlice({
                 if (section) section.tasks = section.tasks.filter((t) => t.id !== action.payload.taskId);
             })
             .addCase(moveTask.fulfilled, (state, action) => {
-                const { taskId, sourceSectionId, destinationSectionId, task } = action.payload;
+                const { taskId, sourceSectionId, destinationSectionId, task} = action.payload;
 
                 const sourceSection = state.sections.find(s => s.id === sourceSectionId);
                 const destSection = state.sections.find(s => s.id === destinationSectionId);
