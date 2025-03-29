@@ -111,7 +111,7 @@ import API from "../Axios/api";
         MoveTaskPayload
     >(
         'kanban/moveTask',
-        async ({ taskId, sourceSectionId, destinationSectionId}, { dispatch }) => {
+        async ({ taskId, sourceSectionId, destinationSectionId}) => {
             try {
                 const response = await API.patch(`/task/move`, {
                     taskId,
