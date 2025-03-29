@@ -6,10 +6,7 @@ import { sectionRouter } from './routes/section';
 
 const app = new Hono()
 
-app.use("*", cors({
-    origin: 'http://localhost:5173',
-    credentials: true
-}));
+app.use("/*", cors());
 
 app.route("/api/v1/auth", userRouter);
 app.route("/api/v1/task", taskRouter);
