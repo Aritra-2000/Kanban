@@ -93,7 +93,7 @@ export const loginUser = createAsyncThunk<
         { rejectValue: string }
     >("auth/login", async (credentials, { rejectWithValue }) => {
         try {
-            const response = await API.post<authResponse>("/auth/login", credentials);
+            const response = await API.post<authResponse>("/api/v1/auth/login", credentials);
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("user", JSON.stringify(response.data.user));
             return response.data;
