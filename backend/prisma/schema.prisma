@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  id          String @id @default(cuid())
+  name        String  
+  email       String @unique
+  password    String 
+  profilePic  String?
+}
+
+model Task{
+  id          String @id @default(cuid())
+  name        String
+  description String 
+  dueDate     DateTime
+  assignee    String
+  sectionId   String
+  section     Section @relation(fields: [sectionId], references: [id])
+  createdAt   DateTime @default(now()) @map("createdAt")
+  updatedAt   DateTime @updatedAt @map("updatedAt")
+  @@map("tasks")
+}
+
+model Section{
+  id        String @id @default(cuid())
+  name      String 
+  tasks     Task[]
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+  @@map("sections")
+}
