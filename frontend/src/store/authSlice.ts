@@ -71,7 +71,7 @@ export const fetchCurrentUser = createAsyncThunk<
                 return rejectWithValue("No token found");
             }
     
-            const response = await API.get("/auth/me", {
+            const response = await API.get("/api/v1/auth/me", {
                 headers: { Authorization: `Bearer ${token}` }
             });
     
@@ -83,7 +83,7 @@ export const fetchCurrentUser = createAsyncThunk<
     });
     
     export const fetchUserCount = createAsyncThunk("kanban/fetchUserCount", async () => {
-        const response = await API.get("/auth/count");
+        const response = await API.get("/api/v1/auth/count");
         return response.data.totalUsers;
     });
     
@@ -109,7 +109,7 @@ export const signupUser = createAsyncThunk<
         { rejectValue: string }
     >("auth/signup", async (credentials, { rejectWithValue }) => {
         try {
-            const response = await API.post<authResponse>("/auth/signup", credentials);
+            const response = await API.post<authResponse>("/api/v1/auth/signup", credentials);
             return response.data;
         } catch (error) {
             const err = error as KnownError
@@ -117,7 +117,7 @@ export const signupUser = createAsyncThunk<
         }
 });
 
-export const logoutUser = createAsyncThunk("auth/logout", async () => {
+export const logoutUser = createAsyncThunk("/api/v1/auth/logout", async () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     return null;

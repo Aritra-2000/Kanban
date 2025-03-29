@@ -38,7 +38,7 @@ import API from "../Axios/api";
     }
 
     export const fetchSections = createAsyncThunk("kanban/fetchSections", async() =>{
-        const response = await API.get<Section[]>("/section");
+        const response = await API.get<Section[]>("/api/v1/section");
         return response.data;
     });
 
@@ -47,7 +47,7 @@ import API from "../Axios/api";
         id: string
     }) => {
         try {
-            const res = await API.post('/section', sectionData);
+            const res = await API.post('/api/v1/section', sectionData);
             return res.data;
         } catch (error) {
             throw error;
@@ -56,13 +56,13 @@ import API from "../Axios/api";
 
 
     export const updateSection = createAsyncThunk("kanban/updateSection", async({id, name}:{id: string, name: string}) => {
-        await API.put(`/section/${id}`, {name});
+        await API.put(`/api/v1/section/${id}`, {name});
         return {id, name};
     });
 
 
     export const deleteSection = createAsyncThunk("kanban/deleteSection", async(id: string) => {
-        await API.delete(`/section/${id}`);
+        await API.delete(`/api/v1/section/${id}`);
         return id;
     });
 
@@ -73,7 +73,7 @@ import API from "../Axios/api";
             assignee: string;
             sectionId: string;
     }) =>{
-        const res = await API.post("/task", taskData);
+        const res = await API.post("/api/v1/task", taskData);
         return{
             sectionId: taskData.sectionId,
             task: res.data,
@@ -92,12 +92,12 @@ import API from "../Axios/api";
             section: string;
         }
     }) =>{
-        const res = await API.put(`/task/${taskId}`, taskData);
+        const res = await API.put(`/api/v1/task/${taskId}`, taskData);
         return {sectionId, taskId, updatedTask: res.data.task};
     });
 
     export const deleteTask = createAsyncThunk("kanban/deleteTask", async({ sectionId, taskId}:{sectionId:string, taskId: string})=>{
-        await API.delete(`/task/${taskId}`);
+        await API.delete(`/api/v1/task/${taskId}`);
         return {sectionId, taskId};
     });
 
@@ -113,7 +113,7 @@ import API from "../Axios/api";
         'kanban/moveTask',
         async ({ taskId, sourceSectionId, destinationSectionId}) => {
             try {
-                const response = await API.patch(`/task/move`, {
+                const response = await API.patch(`/api/v1/task/move`, {
                     taskId,
                     sourceSectionId,
                     destinationSectionId
